@@ -1,95 +1,102 @@
-html<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AudioMonkeys</title>
-<style>
-    /* Base Styling & Background */
-    body { 
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-        margin: 0;
-        padding: 20px;
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: linear-gradient(135deg, #0f0f14 0%, #1a1a24 50%, #0a0a0f 100%);
-        background-image: 
-            radial-gradient(rgba(255, 153, 0, 0.15) 1px, transparent 0),
-            radial-gradient(rgba(255, 153, 0, 0.1) 1px, transparent 0);
-        background-size: 24px 24px;
-        background-position: 0 0, 12px 12px;
-        color: #ffffff; 
-        box-sizing: border-box;
-    }
+    <title>AudioMonkeys - HiFi Audio Community</title>
+    <style>
+        /* Modern full-view box model resetting layout boundaries */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
 
-    /* Responsive Full-Screen Container */
-    .container { 
-        width: 100%;
-        max-width: 800px; /* Expanded from 600px for a full-screen feel */
-        background: rgba(25, 25, 35, 0.85); 
-        padding: 30px; 
-        border-radius: 16px; 
-        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        border: 1px solid rgba(255, 153, 0, 0.2);
-        text-align: center;
-        box-sizing: border-box;
-    }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* Ensures header text never gets pushed off screen */
+            background: linear-gradient(135deg, #0f0f14 0%, #1a1a24 50%, #0a0a0f 100%);
+            background-image: 
+                radial-gradient(rgba(255, 153, 0, 0.15) 1px, transparent 0),
+                radial-gradient(rgba(255, 153, 0, 0.1) 1px, transparent 0);
+            background-size: 24px 24px;
+            background-position: 0 0, 12px 12px;
+            color: #ffffff; 
+        }
 
-    /* Typography */
-    h1 { 
-        color: #ff9900; 
-        font-size: 2.5rem; 
-        margin: 0 0 10px 0; 
-        letter-spacing: 1px;
-    }
-    
-    .tagline {
-        color: #a0a0b0; 
-        font-size: 1.1rem;
-        margin-bottom: 25px; 
-        line-height: 1.4;
-    }
+        /* Unlocked Full-Screen Container */
+        .container { 
+            width: 100%;
+            max-width: 1100px; /* Unlocks wide desktop monitor spaces */
+            background: rgba(25, 25, 35, 0.85); 
+            padding: 40px; 
+            border-radius: 16px; 
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 153, 0, 0.2);
+            text-align: center;
+            box-sizing: border-box;
+            margin-top: 10px;
+        }
 
-    /* Flexible Height Form Container */
-    .form-wrapper {
-        position: relative;
-        border-radius: 8px;
-        overflow: hidden;
-        background: #ffffff; 
-        box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
-        width: 100%;
-    }
+        /* Clear, unclipped typography positioning */
+        h1 { 
+            color: #ff9900; 
+            font-size: 2.8rem; 
+            margin: 0 0 10px 0; 
+            letter-spacing: 1px;
+        }
+        
+        .tagline {
+            color: #a0a0b0; 
+            font-size: 1.2rem;
+            margin-bottom: 35px; 
+            line-height: 1.4;
+        }
 
-    /* Expanded Iframe Height to stop clipping */
-    iframe { 
-        width: 100%; 
-        height: 850px; /* Increased from 600px to display the full survey without cutting off */
-        border: none;
-        display: block;
-    }
+        /* High vertical layout block for wide Airtable surveys */
+        .form-wrapper {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #ffffff; 
+            width: 100%;
+        }
 
-    /* Mobile optimization so it scales beautifully on small screens */
-    @media (max-width: 600px) {
-        body { padding: 10px; }
-        .container { padding: 15px; }
-        h1 { font-size: 1.8rem; }
-        iframe { height: 1000px; } /* Gives extra room for fields stacked vertically on phones */
-    }
-</style>
+        /* Forced frame height to expose the submit button comfortably */
+        iframe { 
+            width: 100%; 
+            height: 1150px; /* Deep window block to display options without cut-off margins */
+            border: none;
+            display: block;
+        }
+
+        /* Smartphone adaptation rule mechanics */
+        @media (max-width: 768px) {
+            body { padding: 15px 10px; }
+            .container { padding: 20px 15px; }
+            h1 { font-size: 2rem; }
+            iframe { height: 1400px; } /* Stacked question structures on mobile require a taller box */
+        }
+    </style>
 </head>
 <body>
 
     <div class="container">
-        
+        <h1>AudioMonkeys 🐵🔊</h1>
         <div class="tagline">Taking away monkey work so you can enjoy your home audio system again.</div>
         
         <div class="form-wrapper">
             <!-- PASTE YOUR NATIVE AIRTABLE EMBED CODE LINK INSIDE THE SRC ATTRIBUTE BELOW -->
-<iframe class="airtable-embed" src="https://airtable.com/embed/appC6sfDvv6a59e3W/shrkUoWqDBdpmn1kI" frameborder="0" onmousewheel="" width="100%" height="533" style="background: transparent; border: 1px solid #ccc;"></iframe>        </div>
+            <iframe class="airtable-embed" src="https://airtable.com/embed/appC6sfDvv6a59e3W/shrkUoWqDBdpmn1kI" frameborder="0" onmousewheel="" width="100%" height="533" style="background: transparent; border: 1px solid #ccc;"></iframe>
+        </div>
     </div>
 
 </body>
