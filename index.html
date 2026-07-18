@@ -1,47 +1,88 @@
-<!DOCTYPE html>
+html<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>audiomonkeys | HiFi Audio Troubleshooter</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background-color: #1a1a1a;
-      color: #ffffff;
-      display: flex;
-      justify-content: center;
-      padding: 40px 20px;
-    }
-    .container {
-      background-color: #262626;
-      padding: 30px;
-      border-radius: 8px;
-      max-width: 500px;
-      width: 100%;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    }
-    h1 { color: #ff5e00; margin-bottom: 5px; font-weight: 600; }
-    p { color: #b3b3b3; font-size: 14px; margin-bottom: 25px; }
-    iframe {
-      width: 100%;
-      height: 550px;
-      border: none;
-      background: transparent;
-      border-radius: 4px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AudioMonkeys - HiFi Audio Community</title>
+    <style>
+   
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            margin: 0;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          
+            background: linear-gradient(135deg, #0f0f14 0%, #1a1a24 50%, #0a0a0f 100%);
+           
+            background-image: 
+                radial-gradient(rgba(255, 153, 0, 0.15) 1px, transparent 0),
+                radial-gradient(rgba(255, 153, 0, 0.1) 1px, transparent 0);
+            background-size: 24px 24px;
+            background-position: 0 0, 12px 12px;
+            color: #ffffff; 
+        }
+
+      
+        .container { 
+            max-width: 600px; 
+            width: 100%;
+            background: rgba(25, 25, 35, 0.85); 
+            padding: 30px; 
+            border-radius: 16px; 
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 153, 0, 0.2);
+            text-align: center;
+        }
+
+    
+        h1 { 
+            color: #ff9900; 
+            font-size: 2.5rem; 
+            margin: 0 0 10px 0; 
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(ff, 153, 0, 0.3);
+        }
+        
+        .tagline {
+            color: #a0a0b0; 
+            font-size: 1.1rem;
+            margin-bottom: 25px; 
+            line-height: 1.4;
+        }
+
+    
+        .form-wrapper {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #ffffff;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+        }
+
+        iframe { 
+            width: 100%; 
+            height: 600px; 
+            border: none;
+            display: block;
+        }
+    </style>
 </head>
 <body>
 
-  <div class="container">
-    <h1>audiomonkeys 🐒</h1>
-    <p>Submit your system symptoms to the audiomonkeys diagnostic engine to generate your troubleshooting plan.</p>
-    
-    <!-- Paste your Airtable embed link right here -->
-    <iframe class="airtable-embed" src="https://airtable.com/embed/appeN5QOO9ACH3QBo/shrGRa8xfIZ14l82e" frameborder="0" onmousewheel="" width="100%" height="533" style="background: transparent; border: 1px solid #ccc;"></iframe>
-    
-  </div>
+    <div class="container">
+        <h1>AudioMonkeys 🐵🔊</h1>
+        <div class="tagline">all the monkey business about tuning, connections, troubleshooting, and gear reviews.</div>
+        
+        <div class="form-wrapper">
+            <!-- PASTE YOUR NATIVE AIRTABLE EMBED CODE LINK INSIDE THE SRC ATTRIBUTE BELOW -->
+            <iframe class="airtable-embed" src="https://airtable.com/embed/appC6sfDvv6a59e3W/shrkUoWqDBdpmn1kI" frameborder="0" onmousewheel="" width="100%" height="533" style="background: transparent; border: 1px solid #ccc;"></iframe>
+        </div>
+    </div>
 
 </body>
 </html>
