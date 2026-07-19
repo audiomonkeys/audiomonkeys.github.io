@@ -1,103 +1,604 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AudioMonkeys - HiFi Audio Community</title>
-    <style>
-        /* Modern full-view box model resetting layout boundaries */
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            min-height: 100vh;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- SEO basics: title + description show up in Google results and link previews -->
+  <title>AudioMonkeys — Troubleshooting, tuning & gear reviews for home audio</title>
+  <meta name="description" content="AudioMonkeys takes the monkey work out of home audio. Practical troubleshooting, room tuning, and honest gear reviews from an audio engineer who does this for a living.">
 
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            padding: 40px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start; /* Ensures header text never gets pushed off screen */
-            background: linear-gradient(135deg, #0f0f14 0%, #1a1a24 50%, #0a0a0f 100%);
-            background-image: 
-                radial-gradient(rgba(255, 153, 0, 0.15) 1px, transparent 0),
-                radial-gradient(rgba(255, 153, 0, 0.1) 1px, transparent 0);
-            background-size: 24px 24px;
-            background-position: 0 0, 12px 12px;
-            color: #ffffff; 
-        }
+  <!-- Fonts: Archivo = faceplate lettering, Source Serif 4 = article reading, IBM Plex Mono = spec labels -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-        /* Unlocked Full-Screen Container */
-        .container { 
-            width: 100%;
-            max-width: 1100px; /* Unlocks wide desktop monitor spaces */
-            background: rgba(25, 25, 35, 0.85); 
-            padding: 40px; 
-            border-radius: 16px; 
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 153, 0, 0.2);
-            text-align: center;
-            box-sizing: border-box;
-            margin-top: 10px;
-        }
+  <style>
+    /* ============================================================
+       DESIGN TOKENS
+       One place to change the whole look. Try editing --amber and
+       watch every glow on the page update.
+       ============================================================ */
+    :root {
+      --ink:    #14161a;   /* page background: matte charcoal, not pure black */
+      --panel:  #1c1f25;   /* raised "faceplate" panels */
+      --line:   #2c3038;   /* hairline borders, like engraved panel seams */
+      --cream:  #ece5d8;   /* silkscreen label text */
+      --dim:    #9a948a;   /* secondary text */
+      --amber:  #e8a13c;   /* VU-meter glow: buttons, LED, highlights */
+      --trace:  #6fe3a1;   /* phosphor green: the measurement trace */
+      --font-display: "Archivo", sans-serif;
+      --font-body: "Source Serif 4", serif;
+      --font-mono: "IBM Plex Mono", monospace;
+      --maxw: 1040px;      /* content column width */
+    }
 
-        /* Clear, unclipped typography positioning */
-        h1 { 
-            color: #ff9900; 
-            font-size: 2.8rem; 
-            margin: 0 0 10px 0; 
-            letter-spacing: 1px;
-        }
-        
-        .tagline {
-            color: #a0a0b0; 
-            font-size: 1.2rem;
-            margin-bottom: 35px; 
-            line-height: 1.4;
-        }
+    /* ============================================================
+       RESET + BASE
+       ============================================================ */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* High vertical layout block for wide Airtable surveys */
-        .form-wrapper {
-            position: relative;
-            border-radius: 8px;
-            overflow: hidden;
-            background: #ffffff; 
-            width: 100%;
-        }
+    html { scroll-behavior: smooth; }
 
-        /* Forced frame height to expose the submit button comfortably */
-        iframe { 
-            width: 100%; 
-            height: 1150px; /* Deep window block to display options without cut-off margins */
-            border: none;
-            display: block;
-        }
+    body {
+      background: var(--ink);
+      color: var(--cream);
+      font-family: var(--font-body);
+      font-size: 1.0625rem;
+      line-height: 1.65;
+      /* Faint brushed-metal texture: two barely-visible gradients */
+      background-image:
+        radial-gradient(1200px 600px at 70% -10%, rgba(232,161,60,0.05), transparent 60%),
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.012) 0 1px, transparent 1px 3px);
+    }
 
-        /* Smartphone adaptation rule mechanics */
-        @media (max-width: 768px) {
-            body { padding: 15px 10px; }
-            .container { padding: 20px 15px; }
-            h1 { font-size: 2rem; }
-            iframe { height: 1400px; } /* Stacked question structures on mobile require a taller box */
-        }
-    </style>
+    /* Visible keyboard focus — never remove this, it's how keyboard
+       users see where they are */
+    :focus-visible {
+      outline: 2px solid var(--amber);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    .wrap {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Mono "eyebrow" labels used across sections, like silkscreened
+       channel labels on a mixer */
+    .label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+
+    h1, h2 {
+      font-family: var(--font-display);
+      font-weight: 800;
+      letter-spacing: -0.015em;
+      line-height: 1.08;
+      text-wrap: balance;
+    }
+
+    a { color: var(--amber); }
+
+    /* ============================================================
+       HEADER — styled like the top rail of an amplifier faceplate
+       ============================================================ */
+    header {
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      background: color-mix(in srgb, var(--ink) 88%, transparent);
+      backdrop-filter: blur(8px);
+      z-index: 10;
+    }
+
+    .header-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 0;
+    }
+
+    /* The power LED. Subtle breathing glow. */
+    .led {
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      background: var(--amber);
+      box-shadow: 0 0 8px 2px rgba(232,161,60,0.55);
+      animation: breathe 4s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+    @keyframes breathe {
+      0%, 100% { opacity: 1; }
+      50%      { opacity: 0.55; }
+    }
+
+    .wordmark {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.05rem;
+      letter-spacing: 0.14em;
+      color: var(--cream);
+      text-decoration: none;
+    }
+    .wordmark span { color: var(--amber); }
+
+    nav {
+      margin-left: auto;
+      display: flex;
+      gap: 22px;
+    }
+    nav a {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--dim);
+      text-decoration: none;
+    }
+    nav a:hover { color: var(--cream); }
+
+    /* ============================================================
+       HERO — headline + the signature: a room-response trace you
+       can flip between "untreated" and "tuned"
+       ============================================================ */
+    .hero {
+      padding: 72px 0 40px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.3rem, 6vw, 4.1rem);
+      max-width: 18ch;
+      margin: 14px 0 20px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--amber);
+    }
+
+    .hero p.lede {
+      max-width: 54ch;
+      color: var(--dim);
+      font-size: 1.15rem;
+      margin-bottom: 30px;
+    }
+
+    .cta {
+      display: inline-block;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.06em;
+      color: var(--ink);
+      background: var(--amber);
+      text-decoration: none;
+      padding: 13px 26px;
+      border-radius: 3px;
+      box-shadow: 0 0 22px rgba(232,161,60,0.28);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 30px rgba(232,161,60,0.45);
+    }
+
+    /* --- The measurement panel --------------------------------- */
+    .scope {
+      margin-top: 56px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 18px 18px 8px;
+    }
+
+    .scope-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 6px;
+    }
+
+    /* The toggle switch. It's a real <button> so it works with
+       keyboard + screen readers. aria-pressed carries its state. */
+    .toggle {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .toggle button {
+      cursor: pointer;
+      font: inherit;
+      letter-spacing: inherit;
+      text-transform: inherit;
+      color: var(--dim);
+      background: var(--ink);
+      border: 1px solid var(--line);
+      padding: 7px 14px;
+      border-radius: 3px;
+      transition: color 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+    .toggle button[aria-pressed="true"] {
+      color: var(--trace);
+      border-color: var(--trace);
+      box-shadow: 0 0 12px rgba(111,227,161,0.25);
+    }
+
+    .scope svg { width: 100%; height: auto; display: block; }
+
+    /* The two traces crossfade. Opacity transitions are cheap and
+       work in every browser (unlike animating the path itself). */
+    .trace {
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: opacity 0.9s ease;
+      filter: drop-shadow(0 0 5px rgba(111,227,161,0.5));
+    }
+    #trace-rough  { stroke: #e0654a; opacity: 1;
+                    filter: drop-shadow(0 0 5px rgba(224,101,74,0.5)); }
+    #trace-tuned  { stroke: var(--trace); opacity: 0; }
+    .scope.is-tuned #trace-rough { opacity: 0; }
+    .scope.is-tuned #trace-tuned { opacity: 1; }
+
+    .grid-line { stroke: var(--line); stroke-width: 1; }
+    .axis-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      fill: var(--dim);
+      letter-spacing: 0.08em;
+    }
+
+    .scope-caption {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--dim);
+      letter-spacing: 0.06em;
+      padding: 10px 2px 8px;
+    }
+
+    /* ============================================================
+       SECTIONS
+       ============================================================ */
+    section { padding: 72px 0; border-top: 1px solid var(--line); }
+
+    section h2 {
+      font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+      margin: 12px 0 34px;
+    }
+
+    /* --- "What you'll get": spec-sheet rows, not cards ---------- */
+    .spec-row {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 10px 32px;
+      padding: 26px 0;
+      border-top: 1px solid var(--line);
+    }
+    .spec-row:last-of-type { border-bottom: 1px solid var(--line); }
+
+    .spec-row .spec-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--amber);
+      letter-spacing: 0.03em;
+    }
+    .spec-row p { color: var(--dim); max-width: 62ch; }
+    .spec-row p strong { color: var(--cream); font-weight: 600; }
+
+    /* --- Upcoming articles: a tracklist ------------------------- */
+    .tracklist { list-style: none; }
+    .tracklist li {
+      display: flex;
+      align-items: baseline;
+      gap: 20px;
+      padding: 15px 4px;
+      border-top: 1px solid var(--line);
+      font-size: 1.05rem;
+    }
+    .tracklist li:last-child { border-bottom: 1px solid var(--line); }
+    .tracklist .tno {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--amber);
+      min-width: 2.2em;
+    }
+    .tracklist .tlen {
+      margin-left: auto;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--dim);
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+
+    /* --- Subscribe / Airtable embed ----------------------------- */
+    .form-frame {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 10px;
+    }
+    .form-frame iframe {
+      width: 100%;
+      height: 560px;
+      border: 0;
+      border-radius: 4px;
+      background: transparent;
+    }
+    .form-note {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--dim);
+      margin-top: 12px;
+      letter-spacing: 0.06em;
+    }
+
+    /* --- About --------------------------------------------------- */
+    .about p { max-width: 64ch; color: var(--dim); margin-bottom: 1em; }
+    .about p strong { color: var(--cream); font-weight: 600; }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 30px 0 44px;
+    }
+    .footer-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--dim);
+      letter-spacing: 0.1em;
+    }
+    .footer-row .spacer { flex: 1; }
+
+    /* ============================================================
+       RESPONSIVE + ACCESSIBILITY
+       ============================================================ */
+    @media (max-width: 640px) {
+      .spec-row { grid-template-columns: 1fr; gap: 6px; }
+      nav a:not(:last-child) { display: none; } /* keep only "Subscribe" on small screens */
+      .tracklist .tlen { display: none; }
+    }
+
+    /* If someone's OS asks for less motion, turn animations off */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .led { animation: none; }
+      .trace, .cta { transition: none; }
+    }
+  </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>AudioMonkeys 🐵🔊</h1>
-        <div class="tagline">Taking away monkey work so you can enjoy your home audio system again.</div>
-        
-        <div class="form-wrapper">
-            <!-- PASTE YOUR NATIVE AIRTABLE EMBED CODE LINK INSIDE THE SRC ATTRIBUTE BELOW -->
-            <iframe class="airtable-embed" src="https://airtable.com/embed/appC6sfDvv6a59e3W/shrkUoWqDBdpmn1kI" frameborder="0" onmousewheel="" width="100%" height="533" style="background: transparent; border: 1px solid #ccc;"></iframe>
-        </div>
+  <!-- ==========================================================
+       HEADER
+       ========================================================== -->
+  <header>
+    <div class="wrap header-row">
+      <div class="led" aria-hidden="true"></div>
+      <a class="wordmark" href="#top">AUDIO<span>MONKEYS</span></a>
+      <nav aria-label="Site">
+        <a href="#topics">Topics</a>
+        <a href="#queue">Up next</a>
+        <a href="#about">About</a>
+        <a href="#subscribe">Subscribe</a>
+      </nav>
     </div>
+  </header>
+
+  <!-- ==========================================================
+       HERO
+       ========================================================== -->
+  <main id="top">
+    <div class="wrap hero">
+      <p class="label">Troubleshooting · Room tuning · Gear reviews</p>
+      <h1>Your system isn't the problem. <em>Your room is.</em></h1>
+      <p class="lede">
+        AudioMonkeys takes the monkey work out of home audio — practical fixes,
+        honest measurements, and tuning guides from an audio engineer who
+        troubleshoots this stuff for a living, so you can stop fighting your
+        setup and start enjoying it.
+      </p>
+      <a class="cta" href="#subscribe">Join the listening bench</a>
+
+      <!-- The signature: a room frequency-response graph.
+           Click the buttons to crossfade between the two SVG paths. -->
+      <div class="scope" id="scope">
+        <div class="scope-head">
+          <span class="label">Room response · 20 Hz – 20 kHz</span>
+          <div class="toggle" role="group" aria-label="Room state">
+            <button id="btn-rough" aria-pressed="true">Untreated</button>
+            <button id="btn-tuned" aria-pressed="false">Tuned</button>
+          </div>
+        </div>
+
+        <svg viewBox="0 0 900 260" role="img"
+             aria-label="Frequency response graph comparing an untreated room with large peaks and dips against a tuned room with a smooth curve">
+          <!-- horizontal grid lines -->
+          <line class="grid-line" x1="40" y1="40"  x2="880" y2="40"/>
+          <line class="grid-line" x1="40" y1="100" x2="880" y2="100"/>
+          <line class="grid-line" x1="40" y1="160" x2="880" y2="160"/>
+          <line class="grid-line" x1="40" y1="220" x2="880" y2="220"/>
+          <!-- dB axis labels -->
+          <text class="axis-label" x="6" y="44">+12</text>
+          <text class="axis-label" x="14" y="104">0</text>
+          <text class="axis-label" x="6" y="164">-12</text>
+          <text class="axis-label" x="6" y="224">-24</text>
+          <!-- frequency axis labels -->
+          <text class="axis-label" x="40"  y="248">20</text>
+          <text class="axis-label" x="250" y="248">100</text>
+          <text class="axis-label" x="460" y="248">1k</text>
+          <text class="axis-label" x="670" y="248">10k</text>
+          <text class="axis-label" x="855" y="248">20k</text>
+
+          <!-- Untreated room: bass peaks, modal dips, harsh highs -->
+          <path id="trace-rough" class="trace" d="M40,150
+            C80,60 110,55 140,95 C170,140 190,210 225,205
+            C260,200 275,70 310,80 C345,90 360,170 400,160
+            C440,150 470,100 520,110 C570,120 600,95 650,105
+            C700,115 730,75 780,85 C820,92 850,70 880,78"/>
+
+          <!-- Tuned room: gentle downward tilt, smooth -->
+          <path id="trace-tuned" class="trace" d="M40,108
+            C180,100 320,102 460,110 C600,118 740,126 880,132"/>
+        </svg>
+
+        <p class="scope-caption" id="scope-caption">
+          FIG.01 — Same speakers. Same room. The difference is placement, crossover, and about an afternoon.
+        </p>
+      </div>
+    </div>
+
+    <!-- ==========================================================
+         WHAT YOU'LL GET
+         ========================================================== -->
+    <section id="topics">
+      <div class="wrap">
+        <p class="label">Signal chain</p>
+        <h2>What runs through here</h2>
+
+        <div class="spec-row">
+          <div class="spec-name">Troubleshoot</div>
+          <p><strong>When something's wrong and you don't know why.</strong>
+             Ground-loop hum, one dead channel, subs that won't wake up,
+             crackling that only happens at night. Step-by-step diagnosis in
+             plain language — no forum archaeology required.</p>
+        </div>
+
+        <div class="spec-row">
+          <div class="spec-name">Tune</div>
+          <p><strong>When everything works but nothing sounds right.</strong>
+             Subwoofer placement and phase, crossover settings that actually
+             blend, taming boomy rooms, and what measurement software can tell
+             you that your ears can't.</p>
+        </div>
+
+        <div class="spec-row">
+          <div class="spec-name">Review</div>
+          <p><strong>When you're about to spend real money.</strong>
+             Gear reviews built on measurements and long-term listening — what
+             a piece actually does in a real living room, not what the spec
+             sheet promises.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         UPCOMING ARTICLES (tracklist)
+         ========================================================== -->
+    <section id="queue">
+      <div class="wrap">
+        <p class="label">In the queue</p>
+        <h2>First pressing</h2>
+        <ul class="tracklist">
+          <li><span class="tno">01</span> Killing ground-loop hum for good <span class="tlen">TROUBLESHOOT</span></li>
+          <li><span class="tno">02</span> The subwoofer crawl: find the right spot in one evening <span class="tlen">TUNE</span></li>
+          <li><span class="tno">03</span> Crossover settings, explained like a human <span class="tlen">TUNE</span></li>
+          <li><span class="tno">04</span> Why your system sounds worse at night (and it's not the power) <span class="tlen">TROUBLESHOOT</span></li>
+          <li><span class="tno">05</span> What a $60 measurement mic can teach you about your room <span class="tlen">TUNE</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         SUBSCRIBE — the Airtable intake form
+         ========================================================== -->
+    <section id="subscribe">
+      <div class="wrap">
+        <p class="label">Input stage</p>
+        <h2>Join the listening bench</h2>
+        <p class="lede" style="color: var(--dim); max-width: 58ch; margin-bottom: 26px;">
+          Opt in and new articles land in your inbox. Tell us what you're
+          running and what's driving you nuts — reader problems become
+          future articles.
+        </p>
+        <div class="form-frame">
+          <iframe
+            src="https://airtable.com/embed/appC6sfDvv6a59e3W/shrkUoWqDBdpmn1kI"
+            title="AudioMonkeys signup form"
+            loading="lazy">
+          </iframe>
+        </div>
+        <p class="form-note">NO SPAM · NO SELLING YOUR EMAIL · UNSUBSCRIBE ANYTIME</p>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         ABOUT
+         ========================================================== -->
+    <section id="about" class="about">
+      <div class="wrap">
+        <p class="label">Behind the desk</p>
+        <h2>Who's writing this</h2>
+        <p><strong>The Monkey</strong> is an audio engineer with a degree in
+           digital audio technology and years spent tuning rooms with
+           measurement mics, designing systems, and diagnosing gear
+           professionally — which means hearing every possible way a system
+           can misbehave, and fixing most of them.</p>
+        <p>The byline stays anonymous for now. The measurements can speak for
+           themselves.</p>
+        <p>AudioMonkeys exists because most home audio advice is either
+           marketing or folklore. This is the third option: what actually
+           works, tested in real rooms, explained without the jargon.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================================
+       FOOTER
+       ========================================================== -->
+  <footer>
+    <div class="wrap footer-row">
+      <span>AUDIOMONKEYS © 2026</span>
+      <span class="spacer"></span>
+      <span>MADE IN THE BAY AREA · 20Hz–20kHz</span>
+    </div>
+  </footer>
+
+  <!-- ==========================================================
+       JAVASCRIPT — the whole interactive part of this page.
+       Read this last: it's ~20 lines and does exactly one job.
+       ========================================================== -->
+  <script>
+    // Grab the three elements we care about
+    const scope    = document.getElementById("scope");
+    const btnRough = document.getElementById("btn-rough");
+    const btnTuned = document.getElementById("btn-tuned");
+    const caption  = document.getElementById("scope-caption");
+
+    // One function that puts the panel in either state.
+    // Toggling the "is-tuned" class is all the CSS needs to
+    // crossfade the two SVG traces (see the .scope rules above).
+    function setTuned(tuned) {
+      scope.classList.toggle("is-tuned", tuned);
+      btnRough.setAttribute("aria-pressed", String(!tuned));
+      btnTuned.setAttribute("aria-pressed", String(tuned));
+      caption.textContent = tuned
+        ? "FIG.02 — Same speakers. Same room. This is what an afternoon of tuning buys you."
+        : "FIG.01 — Same speakers. Same room. The difference is placement, crossover, and about an afternoon.";
+    }
+
+    btnRough.addEventListener("click", () => setTuned(false));
+    btnTuned.addEventListener("click", () => setTuned(true));
+  </script>
 
 </body>
 </html>
